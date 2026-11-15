@@ -21,10 +21,9 @@ namespace opsek {
 
 		FlushInstructionCache(GetCurrentProcess(), addy, code.size());
 
-		auto fn = reinterpret_cast<int64_t(*)()>(addy);
-		int64_t result = fn();
+		auto fn = reinterpret_cast<int64_t(*)(int(*)(), int(*)(int))>(addy);
+		int64_t result = fn([] {return getchar(); }, [](int c) {return putchar(c); }); // later use patching
 
-		VirtualFree(addy, 0, MEM_RELEASE);
-		return result;
+		return 0;
 	}
 }
